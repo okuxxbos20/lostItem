@@ -16,6 +16,16 @@
   - ここで編集できる
   - ここで削除できる
 
+## ディレクトリ構成
+
+```
+lostItem/
+├── web/          # React Router v7 アプリ
+├── infra/        # Terraform (AWS基盤)
+├── compose.yaml  # Docker Compose (PostgreSQL + MinIO)
+└── docs/         # ドキュメント
+```
+
 ## 技術スタック
 
 - [React Router v7](https://reactrouter.com/) (旧Remix)
@@ -24,6 +34,7 @@
 - PostgreSQL 16
 - MinIO（ローカルS3互換ストレージ）
 - Docker Compose
+- Terraform (AWS基盤)
 
 ## セットアップ
 
@@ -31,15 +42,18 @@
 
 ```bash
 # 1. 依存関係のインストール
+cd web
 npm install
 
 # 2. 環境変数の準備
 cp .env.example .env
 
-# 3. Docker Compose起動（PostgreSQL + MinIO）
+# 3. Docker Compose起動（PostgreSQL + MinIO）（リポジトリルートで実行）
+cd ..
 docker compose up -d
 
 # 4. DBマイグレーション
+cd web
 npm run db:migrate
 
 # 5. 開発サーバー起動
@@ -65,10 +79,10 @@ npm run dev
   - AWS CLIが入っているか確認
   - kiro（エディタ）の起動確認
 - [ ] プロジェクトのセットアップ
-  - `npm install` で依存関係インストール
+  - `cd web && npm install` で依存関係インストール
   - `cp .env.example .env` で環境変数準備
-  - `docker compose up -d` でDB・MinIO起動
-  - `npm run db:migrate` でマイグレーション実行
+  - リポジトリルートで `docker compose up -d` でDB・MinIO起動
+  - `cd web && npm run db:migrate` でマイグレーション実行
   - `npm run dev` で起動確認
 
 ### 2. 落とし物の一覧表示・新規作成（13:30〜14:30）60min
@@ -143,7 +157,7 @@ npm run dev
 ### 事前準備（講師側）
 
 - [ ] 完成版のデモアプリを用意しておく
-- [ ] `docker-compose.yml` の動作確認
+- [ ] `compose.yaml` の動作確認
   - MinIO（S3互換）
   - PostgreSQL
   - MinIO初期化（バケット自動作成）

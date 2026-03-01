@@ -13,8 +13,10 @@ dist/
 
 # Prisma
 prisma/*.db
+web/generated/
+
+# Vite
+.vite/
 
 # IDE
 .idea/
-
-/generated/prisma

@@ -18,6 +18,7 @@ cd lostItem
 ## 2. 依存関係のインストール
 
 ```bash
+cd web
 npm install
 ```
 
@@ -26,10 +27,16 @@ npm install
 ## 3. 環境変数の準備
 
 ```bash
+# web/ ディレクトリ内で実行
 cp .env.example .env
+
+# リポジトリルートにシンボリックリンクを作成（docker composeがポート設定を読むため）
+cd ..
+ln -s web/.env .env
+cd web
 ```
 
-`.env` の内容（デフォルトのままでOK）:
+`web/.env` の内容（デフォルトのままでOK）:
 
 ```
 # Docker Compose ポート設定（変更可能）
@@ -43,7 +50,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/lostitem
 S3_ENDPOINT=http://localhost:9000
 S3_BUCKET=lostitem
 S3_ACCESS_KEY=minioadmin
-S3_SECRET_KEY=minioadmin
+S3_SECRET_KEY=minio-admin-pass1
 S3_REGION=ap-northeast-1
 ```
 
@@ -52,9 +59,13 @@ S3_REGION=ap-northeast-1
 
 ## 4. Docker Compose起動
 
+**リポジトリルートで実行してください。**
+
 PostgreSQL と MinIO（S3互換ストレージ）を起動します。
 
 ```bash
+# リポジトリルートで実行
+cd ..
 docker compose up -d
 ```
 
@@ -84,12 +95,20 @@ docker compose ps
 ## 5. DBマイグレーション
 
 ```bash
+# web/ ディレクトリで実行
+cd web
 npm run db:migrate
 ```
 
 マイグレーション名を聞かれたら適当な名前を入力してください（例: `init`）。
 
-## 6. Prisma Clientの生成
+## 6. テスト用DBマイグレーション
+
+```bash
+npm run db:migrate:test
+```
+
+## 7. Prisma Clientの生成
 
 マイグレーション時に自動で生成されますが、手動で実行する場合:
 
@@ -97,7 +116,7 @@ npm run db:migrate
 npx prisma generate
 ```
 
-## 7. seedデータの投入（任意）
+## 8. seedデータの投入（任意）
 
 サンプルデータを投入する場合:
 
@@ -105,7 +124,7 @@ npx prisma generate
 npm run db:seed
 ```
 
-## 8. 開発サーバー起動
+## 9. 開発サーバー起動
 
 ```bash
 npm run dev
@@ -118,17 +137,10 @@ http://localhost:5173 にアクセスして画面が表示されればセット�
 Docker Compose内にテスト専用のPostgreSQLとMinIOが含まれています（`db-test`, `minio-test`）。
 `docker compose up -d` で開発用と一緒に起動されます。
 
-環境構築時にテスト用DBへのマイグレーションも実行しておいてください:
-
-```bash
-# テスト用DBにマイグレーション適用
-npm run db:migrate:test
-```
-
 テスト実行:
 
 ```bash
-# テスト実行
+# web/ ディレクトリで実行
 npm run test
 
 # watchモード（ファイル変更で自動再実行）
@@ -140,10 +152,10 @@ npm run test:watch
 テストファイルは `test/` ディレクトリに `app/` と同じ構造で配置します:
 
 ```
-test/
-├── setup.ts              # テスト共通ユーティリティ
+web/test/
+├── cleanup.ts                # テスト後の自動クリーンアップ
 └── services/
-    └── s3.server.test.ts  # app/services/s3.server.ts のテスト
+    └── s3.server.test.ts     # app/services/s3.server.ts のテスト
 ```
 
 > **ポート番号**: テスト用DBは `5555`、テスト用MinIOは `9002` がデフォルトです。
@@ -151,18 +163,21 @@ test/
 
 ## よく使うコマンド
 
-| コマンド                 | 説明                                              |
-| ------------------------ | ------------------------------------------------- |
-| `npm run dev`            | 開発サーバー起動                                  |
-| `npm run test`           | テスト実行                                        |
-| `npm run test:watch`     | テスト実行（watchモード）                         |
-| `npm run build`          | 本番ビルド                                        |
-| `npm run db:migrate`     | マイグレーション実行                              |
-| `npm run db:seed`        | seedデータ投入                                    |
-| `npm run db:reset`       | DB初期化（全データ削除 → マイグレーション再実行） |
-| `docker compose up -d`   | Docker起動                                        |
-| `docker compose down`    | Docker停止                                        |
-| `docker compose down -v` | Docker停止 + データ削除                           |
+`npm` コマンドは `web/` ディレクトリで、`docker compose` コマンドはリポジトリルートで実行してください。
+
+| コマンド                 | 実行場所 | 説明                                              |
+| ------------------------ | -------- | ------------------------------------------------- |
+| `npm run dev`            | web/     | 開発サーバー起動                                  |
+| `npm run test`           | web/     | テスト実行                                        |
+| `npm run test:watch`     | web/     | テスト実行（watchモード）                         |
+| `npm run build`          | web/     | 本番ビルド                                        |
+| `npm run db:migrate`     | web/     | マイグレーション実行                              |
+| `npm run db:migrate:test`| web/     | テスト用DBマイグレーション                        |
+| `npm run db:seed`        | web/     | seedデータ投入                                    |
+| `npm run db:reset`       | web/     | DB初期化（全データ削除 → マイグレーション再実行） |
+| `docker compose up -d`   | ルート   | Docker起動                                        |
+| `docker compose down`    | ルート   | Docker停止                                        |
+| `docker compose down -v` | ルート   | Docker停止 + データ削除                           |
 
 ## トラブルシューティング
 
@@ -173,7 +188,7 @@ test/
 lsof -i :5432
 ```
 
-`.env` のポート番号を変更して対処できます:
+`web/.env` のポート番号を変更して対処できます:
 
 ```bash
 # 例: PostgreSQLを5434に変更
@@ -181,18 +196,18 @@ DB_PORT=5434
 DATABASE_URL=postgresql://postgres:postgres@localhost:5434/lostitem
 ```
 
-変更後に `docker compose up -d` で再起動してください。
+変更後にリポジトリルートで `docker compose up -d` を再実行してください。
 
 ### DBに接続できない
 
 ```bash
-# Docker Composeのログを確認
+# リポジトリルートで実行
 docker compose logs db
 ```
 
 ### マイグレーションがエラーになる
 
 ```bash
-# DBをリセットして最初からやり直す
+# web/ ディレクトリで実行
 npm run db:reset
 ```
