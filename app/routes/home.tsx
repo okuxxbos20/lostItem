@@ -10,7 +10,7 @@ export function meta(_args: Route.MetaArgs) {
 export default function Home() {
   return (
     <div>
-      <p>this is the home page</p>
+      <h1>落とし物管理システム</h1>
     </div>
   )
 }

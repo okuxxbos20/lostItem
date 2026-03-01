@@ -1,17 +1,36 @@
 {
   "permissions": {
     "allow": [
+      "Bash(cd:*)",
+      "Bash(docker compose:*)",
       "Bash(npm install:*)",
       "Bash(npm run test:*)",
       "Bash(npm run format:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run lint:fix:*)",
-      "Bash(git -C /Users/oku/ws/lostItem status)",
-      "Bash(git -C /Users/oku/ws/lostItem diff)",
-      "Bash(git -C /Users/oku/ws/lostItem log --oneline -10)",
+      "Bash(find:*)",
+      "Bash(gh api:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
       "Bash(git add:*)",
-      "Bash(git -C /Users/oku/ws/lostItem commit -m \"$\\(cat <<''EOF''\nReact Router v7 + Prisma + Docker Composeによるプロジェクト初期セットアップ\n\n落とし物検索システムの雛形を作成.\n- React Router v7 \\(Viteベース\\) + Tailwind CSS v4\n- Prisma 6 + PostgreSQL 16 \\(Docker Compose\\)\n- MinIO \\(S3互換ストレージ, Docker Compose\\)\n- S3クライアント雛形 \\(環境変数でMinIO/AWS切替\\)\n- 環境構築手順書 \\(docs/setup.md\\)\n- ポート番号を.envで変更可能に設定\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git -C /Users/oku/ws/lostItem add:*)"
+      "Bash(git checkout -b:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git grep:*)",
+      "Bash(git log:*)",
+      "Bash(git mv:*)",
+      "Bash(git push:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }
