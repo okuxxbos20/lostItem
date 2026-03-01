@@ -1,0 +1,148 @@
+<mxfile host="65bd71144e">
+    <diagram name="Lost and Found - AWS Architecture" id="aws-arch">
+        <mxGraphModel dx="955" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="落とし物検索システム Terraform AWS Architecture" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#232F3E;align=center;verticalAlign=middle;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="5" width="550" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="gitlab" value="GitLab CI/CD" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_corporate_data_center;strokeColor=#5A6C86;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#5A6C86;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="8" y="80" width="155" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="gitlab-build" value="&lt;b&gt;build&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;Docker Build → ECR Push&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#F8F8F8;strokeColor=#CCCCCC;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="18" y="125" width="135" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="gitlab-deploy" value="&lt;b&gt;deploy&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;start-deployment&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#F8F8F8;strokeColor=#CCCCCC;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="18" y="198" width="135" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="gitlab-flow" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#5A6C86;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="gitlab-build" target="gitlab-deploy" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="user" value="Users" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.users;" parent="1" vertex="1">
+                    <mxGeometry x="42" y="340" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="cloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=14;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="185" y="35" width="960" height="630" as="geometry"/>
+                </mxCell>
+                <mxCell id="region" value="Region (ap-northeast-1)" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#00A4A6;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#147EBA;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="68" width="920" height="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="apprunner" value="App Runner" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.app_runner;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="115" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="ecr" value="Amazon ECR" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ecr;fillStyle=solid;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="115" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="s3" value="Amazon S3" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="115" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="vpc" value="VPC" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#8C4FFF;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#AAB7B8;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="235" y="220" width="860" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="vpcconnector" value="VPC Connector" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_endpoint;" parent="1" vertex="1">
+                    <mxGeometry x="350" y="340" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="sg-rds" value="Security Group" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=11;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;strokeColor=#DD3522;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#DD3522;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="280" width="300" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="rds" value="Amazon RDS&lt;br&gt;&lt;font style=&quot;font-size:9px;font-weight:normal;&quot;&gt;PostgreSQL 16 / db.t3.micro&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#C925D1;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rds;" parent="1" vertex="1">
+                    <mxGeometry x="670" y="340" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="iam" value="IAM Roles &amp; Policies" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#BF0816;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.identity_and_access_management;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="555" width="48" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-user-apprunner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#ED7100;" parent="1" source="user" target="apprunner" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="150" y="364"/>
+                            <mxPoint x="150" y="139"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-user-apprunner-label" value="HTTPS" style="edgeLabel;html=1;fontSize=10;fontColor=#ED7100;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="e-user-apprunner" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-apprunner-ecr" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#ED7100;" parent="1" source="apprunner" target="ecr" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-apprunner-ecr-label" value="Image Pull" style="edgeLabel;html=1;fontSize=10;fontColor=#ED7100;labelBackgroundColor=#FFFFFF;" parent="e-apprunner-ecr" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-apprunner-s3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#3F8624;" parent="1" source="apprunner" target="s3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="344" y="195"/>
+                            <mxPoint x="764" y="195"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-apprunner-s3-label" value="Instance Role" style="edgeLabel;html=1;fontSize=10;fontColor=#3F8624;labelBackgroundColor=#FFFFFF;" parent="e-apprunner-s3" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-apprunner-vpc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#8C4FFF;" parent="1" source="apprunner" target="vpcconnector" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vpc-rds" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#C925D1;" parent="1" source="vpcconnector" target="rds" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-vpc-rds-label" value="Port 5432" style="edgeLabel;html=1;fontSize=10;fontColor=#C925D1;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="e-vpc-rds" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-gitlab-ecr" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#5A6C86;dashed=1;dashPattern=8 4;" parent="1" source="gitlab-build" target="ecr" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="170" y="146"/>
+                            <mxPoint x="170" y="90"/>
+                            <mxPoint x="554" y="90"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-gitlab-ecr-label" value="Docker Push" style="edgeLabel;html=1;fontSize=10;fontColor=#5A6C86;labelBackgroundColor=#FFFFFF;" parent="e-gitlab-ecr" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-gitlab-apprunner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#5A6C86;dashed=1;dashPattern=8 4;" parent="1" source="gitlab-deploy" target="apprunner" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="170" y="219"/>
+                            <mxPoint x="170" y="210"/>
+                            <mxPoint x="290" y="210"/>
+                            <mxPoint x="290" y="139"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-gitlab-apprunner-label" value="start-deployment" style="edgeLabel;html=1;fontSize=10;fontColor=#5A6C86;labelBackgroundColor=#FFFFFF;" parent="e-gitlab-apprunner" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-iam-apprunner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#BF0816;dashed=1;dashPattern=4 4;" parent="1" source="iam" target="apprunner" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="554" y="530"/>
+                            <mxPoint x="344" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-iam-apprunner-label" value="ECR Access / Instance Role" style="edgeLabel;html=1;fontSize=9;fontColor=#BF0816;labelBackgroundColor=#FFFFFF;" parent="e-iam-apprunner" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="notes" value="&lt;div style=&quot;text-align:left;font-size:11px;line-height:1.6;&quot;&gt;&lt;b&gt;Architecture Notes&lt;/b&gt;&lt;br&gt;• デフォルトVPCを使用（新規VPCは作成しない）&lt;br&gt;• App Runner → VPC Connector → RDS の経路でDBに接続&lt;br&gt;• App Runner → S3 はインスタンスロール (IAM) で認証&lt;br&gt;• GitLab CI/CD: mainブランチ push 時に web/ の変更を検知してビルド・デプロイ&lt;br&gt;• Terraform state: S3 + DynamoDB で管理&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#CCCCCC;fontColor=#333333;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;spacingRight=10;" parent="1" vertex="1">
+                    <mxGeometry x="185" y="680" width="960" height="115" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
