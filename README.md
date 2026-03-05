@@ -18,7 +18,7 @@
 
 ## ディレクトリ構成
 
-```
+```sh
 lostItem/
 ├── web/          # React Router v7 アプリ
 ├── infra/        # Terraform (AWS基盤)
@@ -94,7 +94,7 @@ npm run dev
 - [ ] 一覧画面の作成（`/`）
   - loaderでデータ取得 → 一覧表示
   - Tailwindでカードレイアウトを適用
-- [ ] 新規作成フォームの作成（`/new`）
+- [ ] 新規作成フォームの作成
   - actionでフォーム送信処理
   - 作成後に一覧画面へリダイレクト
 
