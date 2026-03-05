@@ -1,8 +1,11 @@
 {
   "permissions": {
     "allow": [
+      "Bash(aws configure)",
       "Bash(cd:*)",
+      "Bash(docker build:*)",
       "Bash(docker compose:*)",
+      "Bash(docker run:*)",
       "Bash(npm install:*)",
       "Bash(npm run test:*)",
       "Bash(npm run format:*)",
