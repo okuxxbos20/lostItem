@@ -36,6 +36,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
+    "@conform-to/react": "^1.17.1",
+    "@conform-to/zod": "^1.17.1",
     "@prisma/client": "^6.19.2",
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
@@ -47,7 +49,8 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "7.12.0",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",
