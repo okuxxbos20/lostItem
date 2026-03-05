@@ -9,7 +9,7 @@
 ## 全体の流れ
 
 ```txt
-1. Terraformバックエンド(S3 + DynamoDB)の手動作成
+1. Terraformバックエンド(S3)の手動作成
 2. terraform.tfvars の設定
 3. terraform init / plan / apply でAWSリソース作成
 4. Dockerイメージをビルド & ECRにpush
@@ -21,7 +21,7 @@
 
 ## 1. Terraformバックエンドの準備（初回のみ）
 
-Terraformの状態管理用にS3バケットとDynamoDBテーブルを手動で作成する.
+Terraformの状態管理用にS3バケットを手動で作成する.
 
 ```bash
 # S3バケット（tfstate保存用）
@@ -33,14 +33,6 @@ aws s3api create-bucket \
 aws s3api put-bucket-versioning \
   --bucket lostitem-tfstate-xxx \
   --versioning-configuration Status=Enabled
-
-# DynamoDB テーブル（state lock用）
-aws dynamodb create-table \
-  --table-name lostitem-tflock \
-  --attribute-definitions AttributeName=LockID,AttributeType=S \
-  --key-schema AttributeName=LockID,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST \
-  --region ap-northeast-1
 ```
 
 > `lostitem-tfstate-xxx` の `xxx` は一意な値に変更すること.
@@ -62,9 +54,10 @@ project_name = "lostItem"
 aws_region   = "ap-northeast-1"
 db_name      = "lostitem"
 db_username  = "postgres"
-db_password  = "＜強固なパスワードに変更＞"
 s3_bucket    = "lostitem-images-xxx"  # 一意な名前に変更
 ```
+
+> `db_password` はセキュリティのため環境変数で渡す（tfvarsには書かない）.
 
 ---
 
@@ -72,6 +65,9 @@ s3_bucket    = "lostitem-images-xxx"  # 一意な名前に変更
 
 ```bash
 cd infra/env/prod
+
+# DBパスワードを環境変数で設定
+export TF_VAR_db_password="＜強固なパスワード＞"
 
 # 初期化
 terraform init
@@ -132,26 +128,21 @@ docker push <ecr_repository_url>:latest
 
 ## 5. DBマイグレーション
 
-RDSはVPC内にあるため, 直接接続できない.
-以下のいずれかの方法でマイグレーションを実行する.
-
-### 方法A: App Runnerのデプロイ後に実行（推奨）
-
-App Runnerが起動した後, アプリ内でPrismaが自動的にスキーマを確認する.
-事前にDockerfileにマイグレーションコマンドを追加する方法:
-
-```dockerfile
-# Dockerfile の CMD を変更
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
-```
-
-### 方法B: EC2踏み台 or SSMセッション経由
+マイグレーション専用の `Dockerfile.migrate` を使い, ECSタスクとして実行する.
 
 ```bash
-# 踏み台サーバーから実行
-DATABASE_URL=postgresql://postgres:<password>@<rds_endpoint>/lostitem \
-  npx prisma migrate deploy
+# マイグレーション用イメージをビルド & push
+docker build -t lostitem-migrate -f ./web/Dockerfile.migrate ./web
+docker tag lostitem-migrate:latest <ecr_repository_url>:migrate
+docker push <ecr_repository_url>:migrate
+
+# App Runner経由で一時的に実行（VPC内のRDSに接続可能）
+aws apprunner start-deployment --service-arn "$SERVICE_ARN"
 ```
+
+> 初回デプロイ時やスキーマ変更時に, アプリのデプロイ前にマイグレーションを実行する.
+> ローカルからRDSに直接接続できない場合は, マイグレーション用のイメージをApp Runnerで一時的に実行するか,
+> EC2踏み台/SSMセッション経由で `DATABASE_URL=... npx prisma migrate deploy` を実行する.
 
 ---
 
@@ -211,9 +202,8 @@ terraform destroy
 
 > RDSは `skip_final_snapshot = true` に設定されているため, スナップショットなしで即削除される.
 
-バックエンド（S3 + DynamoDB）は手動で削除する:
+バックエンドのS3バケットは手動で削除する:
 
 ```bash
 aws s3 rb s3://lostitem-tfstate-xxx --force
-aws dynamodb delete-table --table-name lostitem-tflock --region ap-northeast-1
 ```

@@ -1,0 +1,6 @@
+FROM node:22-alpine
+COPY ./package.json package-lock.json /app/
+COPY ./prisma /app/prisma
+WORKDIR /app
+RUN npm ci --omit=dev --ignore-scripts && npx prisma generate
+CMD ["npx", "prisma", "migrate", "deploy"]
