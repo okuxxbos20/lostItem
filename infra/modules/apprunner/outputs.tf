@@ -12,3 +12,13 @@ output "security_group_id" {
   description = "App Runner VPC Connector security group ID"
   value       = aws_security_group.apprunner.id
 }
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = data.aws_vpc.default.id
+}
+
+output "subnet_ids" {
+  description = "Subnet IDs"
+  value       = data.aws_subnets.default.ids
+}

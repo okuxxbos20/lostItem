@@ -2,14 +2,15 @@
 
 ## 前提条件
 
-- AWS CLIがインストール済み, `aws configure` で認証設定済み
+- AWS CLIがインストール済み
 - Terraformがインストール済み（>= 1.0）
 - Dockerがインストール済み
 
 ## 全体の流れ
 
 ```txt
-1. Terraformバックエンド(S3)の手動作成
+0. AWS CLIの設定
+1. デフォルトVPCの作成 & Terraformバックエンド(S3)の手動作成
 2. terraform.tfvars の設定
 3. terraform init / plan / apply でAWSリソース作成
 4. Dockerイメージをビルド & ECRにpush
@@ -19,7 +20,58 @@
 
 ---
 
-## 1. Terraformバックエンドの準備（初回のみ）
+## 0. AWS CLIの設定（初回のみ）
+
+AWS IAM Identity Center (SSO) 経由でCLIを設定する.
+
+```bash
+aws configure sso --profile <PROFILE_NAME>
+```
+
+| 項目                    | 値                                       |
+| ----------------------- | ---------------------------------------- |
+| SSO session name        | `lostitem`                               |
+| SSO start URL           | `https://d-9567b4510c.awsapps.com/start` |
+| SSO Region              | `ap-northeast-1`                         |
+| SSO registration scopes | デフォルト（そのままEnter）              |
+
+ブラウザが開くので認証を承認し, アカウントとロール（`AWSAdministratorAccess`）を選択する.
+
+確認:
+
+```bash
+aws sts get-caller-identity --profile <PROFILE_NAME>
+```
+
+以降のコマンドは `--profile <PROFILE_NAME>` を付けるか, 環境変数で切り替える:
+
+```bash
+export AWS_PROFILE=<PROFILE_NAME>
+```
+
+> SSOセッションは一定時間で期限切れになる. 期限切れ時は `aws sso login --profile <PROFILE_NAME>` で再認証する.
+
+---
+
+## 1. デフォルトVPCの作成 & Terraformバックエンドの準備（初回のみ）
+
+### デフォルトVPCの作成
+
+App RunnerのVPC ConnectorやRDSはVPC内に配置される. デフォルトVPCが存在しない場合は作成する.
+
+```bash
+aws ec2 create-default-vpc --profile <PROFILE_NAME>
+```
+
+> 既にデフォルトVPCがある場合は `An error occurred (DefaultVpcAlreadyExists)` と表示されるが問題ない.
+
+> **補足: 専用VPCへの移行について**
+> 本番運用では専用VPCをTerraformで作成するのがベストプラクティス.
+> 現在はデフォルトVPCを使用しているが, 将来的にはCIDR設計・サブネット分割（パブリック/プライベート）・
+> NATゲートウェイの配置を含む専用VPCモジュールを `infra/modules/vpc/` に作成し,
+> 各モジュールの `data "aws_vpc" "default"` を専用VPCの参照に置き換えることを推奨する.
+
+### Terraformバックエンド（S3）の作成
 
 Terraformの状態管理用にS3バケットを手動で作成する.
 

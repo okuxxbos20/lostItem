@@ -20,14 +20,14 @@ Terraformを使用してAWSリソースを構築する.
 
 ## 構成するAWSリソース
 
-| リソース | 用途 |
-|---------|------|
-| ECR | Dockerイメージのレジストリ |
-| App Runner | アプリケーションの実行環境 |
+| リソース            | 用途                       |
+| ------------------- | -------------------------- |
+| ECR                 | Dockerイメージのレジストリ |
+| App Runner          | アプリケーションの実行環境 |
 | RDS (PostgreSQL 16) | データベース (db.t3.micro) |
-| S3 | 画像ファイルの保存 |
-| IAM | App Runner用のアクセス制御 |
-| VPC Connector | App RunnerからRDSへの接続 |
+| S3                  | 画像ファイルの保存         |
+| IAM                 | App Runner用のアクセス制御 |
+| VPC Connector       | App RunnerからRDSへの接続  |
 
 ## ディレクトリ構成
 
@@ -72,7 +72,7 @@ aws s3api put-bucket-versioning \
   --versioning-configuration Status=Enabled
 ```
 
-### 2. DynamoDBテーブル (state lock用)
+<!-- ### 2. DynamoDBテーブル (state lock用)
 
 ```bash
 aws dynamodb create-table \
@@ -81,7 +81,7 @@ aws dynamodb create-table \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \
   --region ap-northeast-1
-```
+``` -->
 
 ### 3. backend.tfのバケット名を更新
 
@@ -133,12 +133,12 @@ mainブランチへのpush時 (`web/` 配下の変更) に自動でビルド・�
 
 ### 必要なGitLab CI/CD Variables
 
-| Variable | 説明 |
-|----------|------|
-| `AWS_ACCESS_KEY_ID` | AWSアクセスキー |
-| `AWS_SECRET_ACCESS_KEY` | AWSシークレットキー |
-| `AWS_DEFAULT_REGION` | AWSリージョン (ap-northeast-1) |
-| `AWS_ACCOUNT_ID` | AWSアカウントID |
+| Variable                | 説明                           |
+| ----------------------- | ------------------------------ |
+| `AWS_ACCESS_KEY_ID`     | AWSアクセスキー                |
+| `AWS_SECRET_ACCESS_KEY` | AWSシークレットキー            |
+| `AWS_DEFAULT_REGION`    | AWSリージョン (ap-northeast-1) |
+| `AWS_ACCOUNT_ID`        | AWSアカウントID                |
 
 ### パイプライン
 
