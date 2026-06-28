@@ -22,3 +22,13 @@ output "s3_bucket_name" {
   description = "S3 bucket name"
   value       = module.s3.bucket_name
 }
+
+output "github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions (set as GitHub secret AWS_ROLE_ARN)"
+  value       = module.cicd.github_actions_role_arn
+}
+
+output "migrate_source_bucket" {
+  description = "S3 bucket for migration source (set as GitHub secret MIGRATE_SOURCE_BUCKET)"
+  value       = module.cicd.migrate_source_bucket
+}

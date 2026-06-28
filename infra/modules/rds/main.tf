@@ -10,7 +10,7 @@ data "aws_subnets" "default" {
 }
 
 resource "aws_db_subnet_group" "this" {
-  name       = "${var.project_name}-db-subnet"
+  name       = "${lower(var.project_name)}-db-subnet"
   subnet_ids = data.aws_subnets.default.ids
 }
 
@@ -36,7 +36,7 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_db_instance" "this" {
-  identifier     = "${var.project_name}-db"
+  identifier     = "${lower(var.project_name)}-db"
   engine         = "postgres"
   engine_version = "16"
   instance_class = "db.t3.micro"

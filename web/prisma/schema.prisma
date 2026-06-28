@@ -9,12 +9,24 @@ datasource db {
 }
 
 model LostItem {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   name        String
   description String?
   imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  images      LostItemImage[]
 
   @@map("lost_items")
+}
+
+model LostItemImage {
+  id         String   @id @default(uuid())
+  lostItemId String
+  key        String
+  url        String
+  createdAt  DateTime @default(now())
+  lostItem   LostItem @relation(fields: [lostItemId], references: [id], onDelete: Cascade)
+
+  @@map("lost_item_images")
 }

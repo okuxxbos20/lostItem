@@ -1,0 +1,74 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: ap-northeast-1
+  ECR_REPOSITORY_URL: 227415628203.dkr.ecr.ap-northeast-1.amazonaws.com/lostitem
+  APP_RUNNER_SERVICE_ARN: arn:aws:apprunner:ap-northeast-1:227415628203:service/lostItem/b6623a61e348456caa78dbc70c807763
+  CODEBUILD_PROJECT_NAME: lostItem-migrate
+  MIGRATE_SOURCE_BUCKET: ${{ secrets.MIGRATE_SOURCE_BUCKET }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $ECR_REPOSITORY_URL:latest -t $ECR_REPOSITORY_URL:${{ github.sha }} ./web
+          docker push $ECR_REPOSITORY_URL:latest
+          docker push $ECR_REPOSITORY_URL:${{ github.sha }}
+
+      - name: Upload migration source to S3
+        run: |
+          cd web
+          zip -r /tmp/migrate-source.zip prisma/ package.json package-lock.json
+          aws s3 cp /tmp/migrate-source.zip s3://$MIGRATE_SOURCE_BUCKET/migrate-source.zip
+
+      - name: Run database migration
+        run: |
+          BUILD_ID=$(aws codebuild start-build \
+            --project-name $CODEBUILD_PROJECT_NAME \
+            --query 'build.id' \
+            --output text)
+          echo "CodeBuild started: $BUILD_ID"
+
+          echo "Waiting for migration to complete..."
+          while true; do
+            STATUS=$(aws codebuild batch-get-builds \
+              --ids "$BUILD_ID" \
+              --query 'builds[0].buildStatus' \
+              --output text)
+            echo "Status: $STATUS"
+            if [ "$STATUS" = "SUCCEEDED" ]; then
+              echo "Migration completed successfully"
+              break
+            elif [ "$STATUS" = "FAILED" ] || [ "$STATUS" = "FAULT" ] || [ "$STATUS" = "STOPPED" ] || [ "$STATUS" = "TIMED_OUT" ]; then
+              echo "Migration failed with status: $STATUS"
+              exit 1
+            fi
+            sleep 10
+          done
+
+      - name: Deploy to App Runner
+        run: |
+          aws apprunner start-deployment --service-arn $APP_RUNNER_SERVICE_ARN
+          echo "App Runner deployment triggered"

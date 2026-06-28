@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "lostitem-tfstate-xxx"
-    key            = "prod/terraform.tfstate"
-    region         = "ap-northeast-1"
-    dynamodb_table = "lostitem-tflock"
-    encrypt        = true
+    bucket  = "lostitem-tfstate-jrt-fujiyoshi"
+    key     = "prod/terraform.tfstate"
+    region  = "ap-northeast-1"
+    profile = "jr_tokai"
+    encrypt = true
   }
 }

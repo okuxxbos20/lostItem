@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+  build:
+    commands:
+      - echo Running database migration...
+      - npm ci --ignore-scripts
+      - npx prisma migrate deploy
